@@ -3,11 +3,13 @@ package ru.vasiljev.aa;
 import io.qameta.allure.Description;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
+import ru.geekbrains.java4.lesson6.db.dao.ProductsMapper;
 import ru.vasiljev.aa.base.enums.CategoryType;
 import ru.vasiljev.aa.dto.Product;
 import ru.vasiljev.aa.service.ProductService;
 import ru.vasiljev.aa.steps.CommonDelProduct;
 import ru.vasiljev.aa.steps.CommonPostProduct;
+import ru.vasiljev.aa.util.DbUtils;
 import ru.vasiljev.aa.util.ErrorBody;
 import ru.vasiljev.aa.util.RetrofitUtils;
 
@@ -22,9 +24,11 @@ public class GetProductsTests{
     private Product product;
     private Integer productId;
     private Integer fakeId;
+    static ProductsMapper productsMapper;
 
     @BeforeAll
     static void beforeAll() {
+        productsMapper = DbUtils.getProductsMapper();
         productService = RetrofitUtils.getRetrofit()
                 .create(ProductService.class);
     }
