@@ -4,11 +4,13 @@ import io.qameta.allure.Description;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
 import retrofit2.Response;
+import ru.geekbrains.java4.lesson6.db.dao.CategoriesMapper;
+import ru.geekbrains.java4.lesson6.db.dao.ProductsMapper;
 import ru.vasiljev.aa.base.enums.CategoryType;
 import ru.vasiljev.aa.dto.Product;
 import ru.vasiljev.aa.service.ProductService;
-import ru.vasiljev.aa.steps.CommonDelProduct;
 import ru.vasiljev.aa.steps.CommonPostProduct;
+import ru.vasiljev.aa.util.DbUtils;
 import ru.vasiljev.aa.util.ErrorBody;
 import ru.vasiljev.aa.util.RetrofitUtils;
 
@@ -21,9 +23,13 @@ public class PutProductTests {
     private Product product;
     private Integer productId = null;
     private int randomNumber;
+    static ProductsMapper productsMapper;
+    static CategoriesMapper categoriesMapper;
 
     @BeforeAll
     static void beforeAll() {
+        productsMapper = DbUtils.getProductsMapper();
+        categoriesMapper = DbUtils.getCategoriesMapper();
         productService = RetrofitUtils.getRetrofit()
                 .create(ProductService.class);
     }
@@ -31,6 +37,7 @@ public class PutProductTests {
     @BeforeEach
     void setUp() {
         product = CommonPostProduct.getProduct(CategoryType.FOOD.getTitle());
+        productId = product.getId();
         randomNumber = (int) (Math.random() * 100000 + 1);
     }
 
@@ -43,8 +50,11 @@ public class PutProductTests {
                         .execute();
 
         assertThat(response.code()).as("Wrong code type").isEqualTo(200);
-        assertThat(response.body().getId()).as("Id is not equal").isEqualTo(product.getId());
-        assertThat(response.body().getPrice()).as("Price is not equal").isEqualTo(randomNumber);
+        assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(productId)).getId())
+                .as("Id is not equal")
+                .isEqualTo(Long.valueOf(productId));
+        assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(productId)).getPrice())
+                .as("Price is not equal").isEqualTo(randomNumber);
     }
 
     @SneakyThrows
@@ -72,14 +82,18 @@ public class PutProductTests {
                         .execute();
 
         assertThat(response.code()).as("Wrong code type").isEqualTo(200);
-        assertThat(response.body().getId()).as("Id is not equal").isEqualTo(product.getId());
-
+        assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(productId)).getId())
+                .as("Id is not equal").isEqualTo(Long.valueOf(productId));
+        assertThat(categoriesMapper.selectByPrimaryKey(2).getTitle())
+                .as("Title is not equal to Electronic").isEqualTo(product.getCategoryTitle());
     }
 
     @SneakyThrows
     @AfterEach
     @Description("Удаление материала")
     void tearDown() {
-        CommonDelProduct.getTearDown(productId);
+        if (productId != null) {
+            productsMapper.deleteByPrimaryKey(Long.valueOf(productId));
+        }
     }
 }

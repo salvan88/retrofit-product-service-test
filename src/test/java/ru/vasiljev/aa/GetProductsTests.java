@@ -8,7 +8,6 @@ import ru.geekbrains.java4.lesson6.db.dao.ProductsMapper;
 import ru.vasiljev.aa.base.enums.CategoryType;
 import ru.vasiljev.aa.dto.Product;
 import ru.vasiljev.aa.service.ProductService;
-import ru.vasiljev.aa.steps.CommonDelProduct;
 import ru.vasiljev.aa.steps.CommonPostProduct;
 import ru.vasiljev.aa.util.DbUtils;
 import ru.vasiljev.aa.util.ErrorBody;
@@ -39,6 +38,7 @@ public class GetProductsTests{
     @BeforeEach
     void setUp() {
         product = CommonPostProduct.getProduct(CategoryType.FOOD.getTitle());
+        productId = product.getId();
         fakeId = (int) (Math.random() * 10000);
     }
 
@@ -68,9 +68,9 @@ public class GetProductsTests{
         assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(productId)).getId())
                 .as("Id is not equal")
                 .isEqualTo(Long.valueOf(productId));
-        assertThat(product.getCategoryTitle())
+        assertThat(categoriesMapper.selectByPrimaryKey(2).getTitle())
                 .as("CategoryTitle is not equal")
-                .isEqualTo(categoriesMapper.selectByPrimaryKey(2).getTitle());
+                .isEqualTo(product.getCategoryTitle());
         assertThat(response.code()).as("Wrong code type").isEqualTo(200);
     }
 
@@ -87,9 +87,9 @@ public class GetProductsTests{
         assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(product.getId())).getId())
                 .as("Id is not equal")
                 .isEqualTo(Long.valueOf(product.getId()));
-        assertThat(product.getCategoryTitle())
+        assertThat(categoriesMapper.selectByPrimaryKey(1).getTitle())
                 .as("CategoryTitle is not equal")
-                .isEqualTo(categoriesMapper.selectByPrimaryKey(1).getTitle());
+                .isEqualTo(product.getCategoryTitle());
         assertThat(response.code()).as("Wrong code type").isEqualTo(200);
     }
 
@@ -111,6 +111,8 @@ public class GetProductsTests{
     @AfterEach
     @Description("Удаление материала")
     void tearDown() {
-        CommonDelProduct.getTearDown(productId);
+        if (productId != null) {
+            productsMapper.deleteByPrimaryKey(Long.valueOf(productId));
+        }
     }
 }

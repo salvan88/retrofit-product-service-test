@@ -4,10 +4,12 @@ import com.github.javafaker.Faker;
 import io.qameta.allure.Description;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
+import ru.geekbrains.java4.lesson6.db.dao.CategoriesMapper;
+import ru.geekbrains.java4.lesson6.db.dao.ProductsMapper;
 import ru.vasiljev.aa.base.enums.CategoryType;
 import ru.vasiljev.aa.dto.Product;
 import ru.vasiljev.aa.service.ProductService;
-import ru.vasiljev.aa.steps.CommonDelProduct;
+import ru.vasiljev.aa.util.DbUtils;
 import ru.vasiljev.aa.util.ErrorBody;
 import ru.vasiljev.aa.util.RetrofitUtils;
 
@@ -19,10 +21,14 @@ public class PostProductTests {
     private Integer productId;
     static ProductService productService;
     private Product product;
+    static ProductsMapper productsMapper;
+    static CategoriesMapper categoriesMapper;
     Faker faker = new Faker();
 
     @BeforeAll
     static void beforeAll() {
+        productsMapper = DbUtils.getProductsMapper();
+        categoriesMapper = DbUtils.getCategoriesMapper();
         productService = RetrofitUtils.getRetrofit()
                 .create(ProductService.class);
     }
@@ -33,20 +39,20 @@ public class PostProductTests {
                 .withCategoryTitle(CategoryType.FOOD.getTitle())
                 .withPrice((int) (Math.random() * 1000 + 1))
                 .withTitle(faker.food().ingredient());
+        productId = product.getId();
     }
 
     @SneakyThrows
     @Test
-    @Description("(+) Добавление нового продукта с Id = null(201)")
+    @Description("(+) Добавление нового продукта с Id = null(FOOD)(201)")
     void createProductFoodPositiveTest() {
 
         retrofit2.Response<Product> response = productService
                 .createProduct(product)
                 .execute();
-        productId = response.body().getId();
 
-        assertThat(response.body().getCategoryTitle())
-                .as("Title is not equal to Food").isEqualTo(CategoryType.FOOD.getTitle());
+        assertThat(categoriesMapper.selectByPrimaryKey(1).getTitle())
+                .as("Title is not equal to Food").isEqualTo(product.getCategoryTitle());
         assertThat(response.code()).as("Wrong code type").isEqualTo(201);
     }
 
@@ -68,7 +74,7 @@ public class PostProductTests {
     @Description("(-) Добавление нового продукта с указанием несуществующей categoryTitle(400)")
     void createProductCategoryTitleIntNegativeTest() {
         retrofit2.Response<Product> response =
-                productService.createProduct(product.withCategoryTitle("word"))
+                productService.createProduct(product.withCategoryTitle(faker.pokemon().name()))
                         .execute();
 
         assertThat(response.code()).as("Wrong code type").isEqualTo(400);
@@ -78,6 +84,8 @@ public class PostProductTests {
     @AfterEach
     @Description("Удаление материала")
     void tearDown() {
-        CommonDelProduct.getTearDown(productId);
+        if (productId != null) {
+            productsMapper.deleteByPrimaryKey(Long.valueOf(productId));
+        }
     }
 }

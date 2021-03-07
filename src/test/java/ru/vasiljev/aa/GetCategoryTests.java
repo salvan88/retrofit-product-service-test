@@ -42,7 +42,7 @@ public class GetCategoryTests {
                 .as("Id is not equal to 1").isEqualTo(1);
         assertThat(categoriesMapper.selectByPrimaryKey(1).getTitle())
                 .as("Title is not equal to Food")
-                .isEqualTo(CategoryType.FOOD.getTitle());
+                .isEqualTo(response.body().getTitle());
     }
 
     @Test
