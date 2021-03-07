@@ -45,6 +45,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\src\main\java\ru\vasiljev\aa\util\DbUtils.java">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\src\main\java\ru\vasiljev\aa\util\ErrorBody.java">
           <value>
             <Attribute>

@@ -3,6 +3,7 @@ package ru.vasiljev.aa;
 import io.qameta.allure.Description;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
+import ru.geekbrains.java4.lesson6.db.dao.CategoriesMapper;
 import ru.geekbrains.java4.lesson6.db.dao.ProductsMapper;
 import ru.vasiljev.aa.base.enums.CategoryType;
 import ru.vasiljev.aa.dto.Product;
@@ -25,10 +26,12 @@ public class GetProductsTests{
     private Integer productId;
     private Integer fakeId;
     static ProductsMapper productsMapper;
+    static CategoriesMapper categoriesMapper;
 
     @BeforeAll
     static void beforeAll() {
         productsMapper = DbUtils.getProductsMapper();
+        categoriesMapper = DbUtils.getCategoriesMapper();
         productService = RetrofitUtils.getRetrofit()
                 .create(ProductService.class);
     }
@@ -62,11 +65,15 @@ public class GetProductsTests{
                 .getProduct(productId)
                 .execute();
 
-        assertThat(response.body().getId()).as("Id is not equal").isEqualTo(productId);
-        assertThat(response.body().getCategoryTitle()).as("CategoryTitle is not equal")
-                .isEqualTo(product.getCategoryTitle());
+        assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(productId)).getId())
+                .as("Id is not equal")
+                .isEqualTo(Long.valueOf(productId));
+        assertThat(product.getCategoryTitle())
+                .as("CategoryTitle is not equal")
+                .isEqualTo(categoriesMapper.selectByPrimaryKey(2).getTitle());
         assertThat(response.code()).as("Wrong code type").isEqualTo(200);
     }
+
 
     @SneakyThrows
     @Test
@@ -77,9 +84,12 @@ public class GetProductsTests{
                 .getProduct(product.getId())
                 .execute();
 
-        assertThat(response.body().getId()).as("Id is not equal").isEqualTo(product.getId());
-        assertThat(response.body().getCategoryTitle()).as("CategoryTitle is not equal")
-                .isEqualTo(product.getCategoryTitle());
+        assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(product.getId())).getId())
+                .as("Id is not equal")
+                .isEqualTo(Long.valueOf(product.getId()));
+        assertThat(product.getCategoryTitle())
+                .as("CategoryTitle is not equal")
+                .isEqualTo(categoriesMapper.selectByPrimaryKey(1).getTitle());
         assertThat(response.code()).as("Wrong code type").isEqualTo(200);
     }
 
@@ -90,6 +100,7 @@ public class GetProductsTests{
         retrofit2.Response<Product> response = productService
                 .getProduct(fakeId)
                 .execute();
+
         assertThat(ErrorBody.getErrorBody(response).getMessage())
                 .as("Wrong error message")
                 .isEqualTo("Unable to find product with id: %d", fakeId);

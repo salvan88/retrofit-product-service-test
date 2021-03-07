@@ -5,9 +5,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import retrofit2.Response;
+import ru.geekbrains.java4.lesson6.db.dao.CategoriesMapper;
 import ru.vasiljev.aa.base.enums.CategoryType;
 import ru.vasiljev.aa.dto.Category;
 import ru.vasiljev.aa.service.CategoryService;
+import ru.vasiljev.aa.util.NotExistedCategories;
+import ru.vasiljev.aa.util.DbUtils;
 import ru.vasiljev.aa.util.ErrorBody;
 import ru.vasiljev.aa.util.RetrofitUtils;
 
@@ -18,9 +21,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("GET category test case")
 public class GetCategoryTests {
     static CategoryService categoryService;
+    static CategoriesMapper categoriesMapper;
 
     @BeforeAll
     static void beforeAll() {
+        categoriesMapper = DbUtils.getCategoriesMapper();
         categoryService = RetrofitUtils.getRetrofit()
                 .create(CategoryService.class);
     }
@@ -31,21 +36,28 @@ public class GetCategoryTests {
         Response<Category> response = categoryService
                 .getCategory(CategoryType.FOOD.getId())
                 .execute();
+
         assertThat(response.isSuccessful()).isTrue();
-        assertThat(response.body().getId()).as("Id is not equal to 1").isEqualTo(1);
-        assertThat(response.body().getTitle()).as("Title is not equal to Food").isEqualTo(CategoryType.FOOD.getTitle());
+        assertThat(categoriesMapper.selectByPrimaryKey(1).getId())
+                .as("Id is not equal to 1").isEqualTo(1);
+        assertThat(categoriesMapper.selectByPrimaryKey(1).getTitle())
+                .as("Title is not equal to Food")
+                .isEqualTo(CategoryType.FOOD.getTitle());
     }
 
     @Test
     @Description("(-) Получить несуществующую категорию(404)")
     void getCategoryNegativeTest() throws IOException {
+        int i = (int) NotExistedCategories.getNextCategoriesNumber() + 2;
+
         Response<Category> response = categoryService
-                .getCategory(3)
+                .getCategory(i)
                 .execute();
 
         assertThat(response.code()).as("Wrong code type").isEqualTo(404);
         assertThat(ErrorBody.getErrorBody(response)
-                .getMessage()).isEqualTo("Unable to find category with id: 3");
+                .getMessage()).isEqualTo("Unable to find category with id: %d", i);
+        assertThat(categoriesMapper.selectByPrimaryKey(i)).isNull();
     }
 
 }
