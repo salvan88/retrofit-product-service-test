@@ -87,6 +87,7 @@ public class PostProductTests {
     void tearDown() {
         if (productId != null) {
             productsMapper.deleteByPrimaryKey(Long.valueOf(productId));
+            assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(product.getId()))).isNull();
         }
     }
 }

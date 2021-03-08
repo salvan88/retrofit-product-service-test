@@ -46,6 +46,7 @@ public class DelProductTests {
                 .execute();
 
         assertThat(response.code()).as("Wrong code type").isEqualTo(200);
+        assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(product.getId()))).isNull();
     }
 
     @SneakyThrows
