@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("POST product test case")
 public class PostProductTests {
-    private Integer productId;
+    private Integer productId = null;
     static ProductService productService;
     private Product product;
     static ProductsMapper productsMapper;
@@ -39,7 +39,6 @@ public class PostProductTests {
                 .withCategoryTitle(CategoryType.FOOD.getTitle())
                 .withPrice((int) (Math.random() * 1000 + 1))
                 .withTitle(faker.food().ingredient());
-        productId = product.getId();
     }
 
     @SneakyThrows
@@ -53,6 +52,8 @@ public class PostProductTests {
 
         assertThat(categoriesMapper.selectByPrimaryKey(1).getTitle())
                 .as("Title is not equal to Food").isEqualTo(product.getCategoryTitle());
+        assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(response.body().getId())).getId())
+                .as("Id is not equal").isEqualTo(Long.valueOf(response.body().getId()));
         assertThat(response.code()).as("Wrong code type").isEqualTo(201);
     }
 

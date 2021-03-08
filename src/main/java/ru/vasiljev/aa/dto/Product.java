@@ -25,5 +25,4 @@ public class Product implements Serializable {
     private Integer price;
     @JsonProperty("categoryTitle")
     private String categoryTitle;
-
 }

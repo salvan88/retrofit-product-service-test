@@ -67,7 +67,7 @@ public class GetProductsTests{
 
         assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(productId)).getId())
                 .as("Id is not equal")
-                .isEqualTo(Long.valueOf(productId));
+                .isEqualTo(Long.valueOf(response.body().getId()));
         assertThat(categoriesMapper.selectByPrimaryKey(2).getTitle())
                 .as("CategoryTitle is not equal")
                 .isEqualTo(product.getCategoryTitle());
@@ -89,7 +89,7 @@ public class GetProductsTests{
                 .isEqualTo(Long.valueOf(product.getId()));
         assertThat(categoriesMapper.selectByPrimaryKey(1).getTitle())
                 .as("CategoryTitle is not equal")
-                .isEqualTo(product.getCategoryTitle());
+                .isEqualTo(response.body().getCategoryTitle());
         assertThat(response.code()).as("Wrong code type").isEqualTo(200);
     }
 
