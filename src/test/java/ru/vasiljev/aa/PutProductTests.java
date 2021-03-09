@@ -1,6 +1,7 @@
 package ru.vasiljev.aa;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
 import retrofit2.Response;
@@ -43,7 +44,8 @@ public class PutProductTests {
 
     @SneakyThrows
     @Test
-    @Description("(+) Изменить price существующего продукта(FOOD)(200)")
+    @Step("Test")
+    @Description("(+) Change price for existed product(FOOD)(200)")
     void putProductChangePrisePositiveTest() {
         Response<Product> response =
                 productService.updateProduct(product.withPrice(randomNumber))
@@ -59,7 +61,8 @@ public class PutProductTests {
 
     @SneakyThrows
     @Test
-    @Description("(-) Изменить price несуществующего продукта(400)")
+    @Step("Test")
+    @Description("(-) Change price for not existed product(400)")
     void putProductChangeWrongIdNegativeTest() {
         Response<Product> response =
                 productService.updateProduct(product.withId(randomNumber))
@@ -72,7 +75,8 @@ public class PutProductTests {
 
     @SneakyThrows
     @Test
-    @Description("(+) Изменить title существующего продукта(ELECTRONIC)(200)")
+    @Step("Test")
+    @Description("(+) Change title for existed product(ELECTRONIC)(200)")
     void putProductChangeTitlePositiveTest() {
         product = CommonPostProduct.getProduct(CategoryType.ELECTRONIC.getTitle());
         productId = product.getId();
@@ -90,11 +94,12 @@ public class PutProductTests {
 
     @SneakyThrows
     @AfterEach
-    @Description("Удаление материала")
+    @Step("Tear down")
+    @Description("Tear down")
     void tearDown() {
         if (productId != null) {
             productsMapper.deleteByPrimaryKey(Long.valueOf(productId));
-            assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(product.getId()))).isNull();
+            assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(productId))).isNull();
         }
     }
 }

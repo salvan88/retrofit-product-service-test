@@ -38,8 +38,8 @@ public class DelProductTests {
 
     @SneakyThrows
     @Test
-    @Step("Тест")
-    @Description("(+) Удаление существующего продукта(FOOD)(200)")
+    @Step("Test")
+    @Description("(+) Delete existed product(FOOD)(200)")
     void delProductFoodPositiveTest() {
         retrofit2.Response<ResponseBody> response = productService
                 .deleteProduct(product.getId())
@@ -51,8 +51,8 @@ public class DelProductTests {
 
     @SneakyThrows
     @Test
-    @Step("Тест")
-    @Description("(+) Удаление несуществующего продукта(FOOD)(204)")
+    @Step("Test")
+    @Description("(-) Delete not existed product(FOOD)(204)")
     void delProductFoodNegativeTest() {
         retrofit2.Response<ResponseBody> response = productService
                 .deleteProduct(fakeId)
@@ -63,8 +63,8 @@ public class DelProductTests {
 
     @SneakyThrows
     @AfterEach
-    @Step("Удаление мусора")
-    @Description("Удаление материала")
+    @Step("Tear down")
+    @Description("Tear down")
     void tearDown() {
         if (productId != null) {
             productsMapper.deleteByPrimaryKey(Long.valueOf(productId));

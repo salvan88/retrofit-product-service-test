@@ -2,6 +2,7 @@ package ru.vasiljev.aa;
 
 import com.github.javafaker.Faker;
 import io.qameta.allure.Description;
+import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
 import ru.geekbrains.java4.lesson6.db.dao.CategoriesMapper;
@@ -9,6 +10,7 @@ import ru.geekbrains.java4.lesson6.db.dao.ProductsMapper;
 import ru.vasiljev.aa.base.enums.CategoryType;
 import ru.vasiljev.aa.dto.Product;
 import ru.vasiljev.aa.service.ProductService;
+import ru.vasiljev.aa.steps.CommonRandomProduct;
 import ru.vasiljev.aa.util.DbUtils;
 import ru.vasiljev.aa.util.ErrorBody;
 import ru.vasiljev.aa.util.RetrofitUtils;
@@ -35,20 +37,20 @@ public class PostProductTests {
 
     @BeforeEach
     void setUp() {
-        product = new Product()
-                .withCategoryTitle(CategoryType.FOOD.getTitle())
-                .withPrice((int) (Math.random() * 1000 + 1))
-                .withTitle(faker.food().ingredient());
+        product = CommonRandomProduct.getRandomProduct(CategoryType.FOOD.getTitle());
     }
 
     @SneakyThrows
     @Test
-    @Description("(+) Добавление нового продукта с Id = null(FOOD)(201)")
+    @Step("Test")
+    @Description("(+) Add new product with Id = null(FOOD)(201)")
     void createProductFoodPositiveTest() {
 
         retrofit2.Response<Product> response = productService
                 .createProduct(product)
                 .execute();
+
+        productId = response.body().getId();
 
         assertThat(categoriesMapper.selectByPrimaryKey(1).getTitle())
                 .as("Title is not equal to Food").isEqualTo(product.getCategoryTitle());
@@ -59,7 +61,8 @@ public class PostProductTests {
 
     @SneakyThrows
     @Test
-    @Description("(-) Добавление нового продукта с указанием Id(400)")
+    @Step("Test")
+    @Description("(-) Add new product with Id(400)")
     void createProductIdNullNegativeTest() {
         retrofit2.Response<Product> response = productService
                 .createProduct(product.withId(1))
@@ -72,7 +75,8 @@ public class PostProductTests {
 
     @SneakyThrows
     @Test
-    @Description("(-) Добавление нового продукта с указанием несуществующей categoryTitle(400)")
+    @Step("Test")
+    @Description("(-) Add new product with not existed categoryTitle(400)")
     void createProductCategoryTitleIntNegativeTest() {
         retrofit2.Response<Product> response =
                 productService.createProduct(product.withCategoryTitle(faker.pokemon().name()))
@@ -83,11 +87,12 @@ public class PostProductTests {
 
     @SneakyThrows
     @AfterEach
-    @Description("Удаление материала")
+    @Step("Tear down")
+    @Description("Tear down")
     void tearDown() {
         if (productId != null) {
             productsMapper.deleteByPrimaryKey(Long.valueOf(productId));
-            assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(product.getId()))).isNull();
+            assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(productId))).isNull();
         }
     }
 }

@@ -1,6 +1,7 @@
 package ru.vasiljev.aa;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,8 @@ public class GetCategoryTests {
     }
 
     @Test
-    @Description("(+) Получить категорию продуктов(FOOD)(200)")
+    @Step("Test")
+    @Description("(+) GET existed category product(FOOD)(200)")
     void getFoodCategoryPositiveTest() throws IOException {
         Response<Category> response = categoryService
                 .getCategory(CategoryType.FOOD.getId())
@@ -46,7 +48,8 @@ public class GetCategoryTests {
     }
 
     @Test
-    @Description("(-) Получить несуществующую категорию(404)")
+    @Step("Test")
+    @Description("(-) GET not existed category product(404)")
     void getCategoryNegativeTest() throws IOException {
         int i = (int) NotExistedCategories.getNextCategoriesNumber() + 2;
 
