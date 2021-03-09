@@ -63,9 +63,7 @@ public class GetProductsTests{
     }
 
     @SneakyThrows
-    @Step("Parameterized Test")
-    @Description("(+) Parameterized Test(200)")
-    @ParameterizedTest
+    @ParameterizedTest(name = "(+) Parameterized Test(200)")
     @EnumSource(CategoryType.class)
     void getProductPositiveTest(CategoryType categoryType) {
 
