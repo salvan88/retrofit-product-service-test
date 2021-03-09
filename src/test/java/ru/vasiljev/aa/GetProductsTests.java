@@ -1,6 +1,5 @@
 package ru.vasiljev.aa;
 
-import com.github.javafaker.Faker;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
@@ -29,10 +28,8 @@ public class GetProductsTests{
     private static ProductService productService;
     private Product product;
     private Integer productId;
-    private Integer fakeId;
     static ProductsMapper productsMapper;
     static CategoriesMapper categoriesMapper;
-    static Faker faker = new Faker();
 
     @BeforeAll
     static void beforeAll() {
@@ -46,7 +43,6 @@ public class GetProductsTests{
     void setUp() {
         product = CommonPostProduct.getProduct(CategoryType.FOOD.getTitle());
         productId = product.getId();
-        fakeId = (int) (Math.random() * 10000);
     }
 
     @SneakyThrows
@@ -94,12 +90,12 @@ public class GetProductsTests{
     @Description("(-) GET not existed product(FOOD)(404)")
     void getProductFoodNegativeTest() {
         retrofit2.Response<Product> response = productService
-                .getProduct(fakeId)
+                .getProduct(-1)
                 .execute();
 
         assertThat(ErrorBody.getErrorBody(response).getMessage())
                 .as("Wrong error message")
-                .isEqualTo("Unable to find product with id: %d", fakeId);
+                .isEqualTo("Unable to find product with id: %d", -1);
         assertThat(response.code()).as("Wrong code type").isEqualTo(404);
     }
 

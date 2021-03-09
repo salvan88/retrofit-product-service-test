@@ -2,7 +2,6 @@ package ru.vasiljev.aa.steps;
 
 import com.github.javafaker.Faker;
 import lombok.SneakyThrows;
-import ru.vasiljev.aa.base.enums.CategoryType;
 import ru.vasiljev.aa.dto.Product;
 import ru.vasiljev.aa.service.ProductService;
 import ru.vasiljev.aa.util.RetrofitUtils;
