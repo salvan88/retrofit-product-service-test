@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import io.qameta.allure.Description;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import retrofit2.Response;
 import ru.geekbrains.java4.lesson6.db.dao.ProductsMapper;
@@ -16,6 +17,7 @@ import ru.vasiljev.aa.util.RetrofitUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DisplayName("Integration test")
 public class IntegrationTests {
     static ProductsMapper productsMapper;
     static ProductService productService;
