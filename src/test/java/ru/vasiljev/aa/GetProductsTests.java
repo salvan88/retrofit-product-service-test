@@ -63,8 +63,8 @@ public class GetProductsTests{
     }
 
     @SneakyThrows
-    @ParameterizedTest(name = "(+) Parameterized Test(200)")
     @EnumSource(CategoryType.class)
+    @ParameterizedTest(name = "(+) GET product positive test: {argumentsWithNames}")
     void getProductPositiveTest(CategoryType categoryType) {
 
         product = CommonRandomProduct.getRandomProduct(categoryType.getTitle());
