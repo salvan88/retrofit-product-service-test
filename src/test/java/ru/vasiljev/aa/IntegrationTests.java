@@ -44,13 +44,13 @@ public class IntegrationTests {
         assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(productId)).getId())
                 .as("Id in GET step is not equal").isEqualTo(Long.valueOf(response.body().getId()));
 
-        Response<Product> putResponse = productService.updateProduct(product
+        response = productService.updateProduct(product
                 .withTitle(faker.food().ingredient())
                 .withPrice((int) faker.number().randomNumber()))
                 .execute();
 
 
-        productId = putResponse.body().getId();
+        productId = response.body().getId();
 
         assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(productId)).getTitle())
                 .as("Title after PUT step is not equal").isEqualTo(response.body().getTitle());
@@ -59,10 +59,10 @@ public class IntegrationTests {
 
         productsMapper.deleteByPrimaryKey(Long.valueOf(productId));
 
-        Response<Product> delResponse = productService
+        response = productService
                 .getProduct(productId)
                 .execute();
-        assertThat(delResponse.code()).isEqualTo(404);
+        assertThat(response.code()).isEqualTo(404);
 
     }
 }
