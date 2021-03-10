@@ -2,6 +2,7 @@ package ru.vasiljev.aa;
 
 import com.github.javafaker.Faker;
 import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +19,7 @@ import ru.vasiljev.aa.util.RetrofitUtils;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Integration test")
+@Feature("Integration test")
 public class IntegrationTests {
     static ProductsMapper productsMapper;
     static ProductService productService;

@@ -1,6 +1,7 @@
 package ru.vasiljev.aa;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("GET category test case")
+@Feature("GET category tests")
 public class GetCategoryTests {
     static CategoryService categoryService;
     static CategoriesMapper categoriesMapper;

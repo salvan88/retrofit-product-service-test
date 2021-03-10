@@ -1,6 +1,7 @@
 package ru.vasiljev.aa;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import okhttp3.ResponseBody;
@@ -16,6 +17,7 @@ import ru.vasiljev.aa.util.RetrofitUtils;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("DELETE product test case")
+@Feature("DELETE product tests")
 public class DelProductTests {
     static ProductService productService;
     private Integer productId = null;

@@ -2,6 +2,7 @@ package ru.vasiljev.aa;
 
 import com.github.javafaker.Faker;
 import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
@@ -19,6 +20,7 @@ import ru.vasiljev.aa.util.RetrofitUtils;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("POST product test case")
+@Feature("POST product tests")
 public class PostProductTests {
     private Integer productId = null;
     static ProductService productService;

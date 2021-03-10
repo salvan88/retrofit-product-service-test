@@ -1,6 +1,7 @@
 package ru.vasiljev.aa;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
@@ -23,6 +24,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("GET product test case")
+@Feature("GET product tests")
 public class GetProductsTests{
 
     private static ProductService productService;
