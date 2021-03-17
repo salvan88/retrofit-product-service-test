@@ -27,6 +27,7 @@ public class PostProductTests {
     private Product product;
     static ProductsMapper productsMapper;
     static CategoriesMapper categoriesMapper;
+    private int randomNumber;
     Faker faker = new Faker();
 
     @BeforeAll
@@ -40,6 +41,7 @@ public class PostProductTests {
     @BeforeEach
     void setUp() {
         product = CommonRandomProduct.getRandomProduct(CategoryType.FOOD.getTitle());
+        randomNumber = (int) (Math.random() * 100000 + 1);
     }
 
     @SneakyThrows
@@ -59,6 +61,22 @@ public class PostProductTests {
         assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(response.body().getId())).getId())
                 .as("Id is not equal").isEqualTo(Long.valueOf(response.body().getId()));
         assertThat(response.code()).as("Wrong code type").isEqualTo(201);
+    }
+
+    @SneakyThrows
+    @Test
+    @Step("Test")
+    @Description("(+) Add new product with price(201)")
+    void createProductPriceIntPositiveTest() {
+        retrofit2.Response<Product> response =
+                productService.createProduct(product.withPrice(randomNumber))
+                        .execute();
+
+        productId = response.body().getId();
+
+        assertThat(response.code()).as("Wrong code type").isEqualTo(201);
+        assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(response.body().getId())).getPrice())
+                .as("Price is not equal").isEqualTo(response.body().getPrice());
     }
 
     @SneakyThrows
