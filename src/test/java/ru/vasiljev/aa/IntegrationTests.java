@@ -3,6 +3,7 @@ package ru.vasiljev.aa;
 import com.github.javafaker.Faker;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -35,8 +36,9 @@ public class IntegrationTests {
     }
 
     @SneakyThrows
+    @Story("Integration test")
     @Test
-    @Description("(+) End to end test(POST, GET, PUT(title, price), DELETE)")
+    @DisplayName("(+) End to end test(POST, GET, PUT(title, price), DELETE)")
     void integrationEndToEndTest() {
 
         product = CommonPostProduct.getProduct(CategoryType.FOOD.getTitle());

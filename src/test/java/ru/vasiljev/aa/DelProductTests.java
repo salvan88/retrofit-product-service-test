@@ -3,6 +3,7 @@ package ru.vasiljev.aa;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
+import io.qameta.allure.Story;
 import lombok.SneakyThrows;
 import okhttp3.ResponseBody;
 import org.junit.jupiter.api.*;
@@ -39,9 +40,10 @@ public class DelProductTests {
     }
 
     @SneakyThrows
+    @Story("Positive")
     @Test
     @Step("Test")
-    @Description("(+) Delete existed product(FOOD)(200)")
+    @DisplayName("(+) Delete existed product(FOOD)(200)")
     void delProductFoodPositiveTest() {
         retrofit2.Response<ResponseBody> response = productService
                 .deleteProduct(product.getId())
@@ -52,9 +54,10 @@ public class DelProductTests {
     }
 
     @SneakyThrows
+    @Story("Negative")
     @Test
     @Step("Test")
-    @Description("(-) Delete not existed product(FOOD)(204)")
+    @DisplayName("(-) Delete not existed product(FOOD)(204)")
     void delProductFoodNegativeTest() {
         retrofit2.Response<ResponseBody> response = productService
                 .deleteProduct(fakeId)
@@ -66,7 +69,7 @@ public class DelProductTests {
     @SneakyThrows
     @AfterEach
     @Step("Tear down")
-    @Description("Tear down")
+    @DisplayName("Tear down")
     void tearDown() {
         if (productId != null) {
             productsMapper.deleteByPrimaryKey(Long.valueOf(productId));

@@ -3,6 +3,7 @@ package ru.vasiljev.aa;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
+import io.qameta.allure.Story;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -48,9 +49,10 @@ public class GetProductsTests{
     }
 
     @SneakyThrows
+    @Story("Positive")
     @Test
     @Step("Test")
-    @Description("(+) GET list of all products(FOOD)(200)")
+    @DisplayName("(+) GET list of all products(FOOD)(200)")
     void getProductsFoodPositiveTest() {
 
         retrofit2.Response<List<Product>> response = productService
@@ -61,6 +63,7 @@ public class GetProductsTests{
     }
 
     @SneakyThrows
+    @Story("Positive")
     @EnumSource(CategoryType.class)
     @ParameterizedTest(name = "(+) GET product positive test: {argumentsWithNames}")
     void getProductPositiveTest(CategoryType categoryType) {
@@ -87,9 +90,10 @@ public class GetProductsTests{
     }
 
     @SneakyThrows
+    @Story("Negative")
     @Test
     @Step("Test")
-    @Description("(-) GET not existed product(FOOD)(404)")
+    @DisplayName("(-) GET not existed product(FOOD)(404)")
     void getProductFoodNegativeTest() {
         retrofit2.Response<Product> response = productService
                 .getProduct(-1)
@@ -104,7 +108,7 @@ public class GetProductsTests{
     @SneakyThrows
     @AfterEach
     @Step("Tear down")
-    @Description("Tear down")
+    @DisplayName("Tear down")
     void tearDown() {
 
         if (productId != null) {

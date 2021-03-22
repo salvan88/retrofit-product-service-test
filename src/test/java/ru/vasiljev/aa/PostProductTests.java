@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
+import io.qameta.allure.Story;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
 import ru.geekbrains.java4.lesson6.db.dao.CategoriesMapper;
@@ -45,9 +46,10 @@ public class PostProductTests {
     }
 
     @SneakyThrows
+    @Story("Positive")
     @Test
     @Step("Test")
-    @Description("(+) Add new product with Id = null(FOOD)(201)")
+    @DisplayName("(+) Add new product with Id = null(FOOD)(201)")
     void createProductFoodPositiveTest() {
 
         retrofit2.Response<Product> response = productService
@@ -64,9 +66,10 @@ public class PostProductTests {
     }
 
     @SneakyThrows
+    @Story("Positive")
     @Test
     @Step("Test")
-    @Description("(+) Add new product with price(201)")
+    @DisplayName("(+) Add new product with price(201)")
     void createProductPriceIntPositiveTest() {
         retrofit2.Response<Product> response =
                 productService.createProduct(product.withPrice(randomNumber))
@@ -80,9 +83,10 @@ public class PostProductTests {
     }
 
     @SneakyThrows
+    @Story("Negative")
     @Test
     @Step("Test")
-    @Description("(-) Add new product with Id(400)")
+    @DisplayName("(-) Add new product with Id(400)")
     void createProductIdNullNegativeTest() {
         retrofit2.Response<Product> response = productService
                 .createProduct(product.withId(1))
@@ -94,9 +98,10 @@ public class PostProductTests {
     }
 
     @SneakyThrows
+    @Story("Negative")
     @Test
     @Step("Test")
-    @Description("(-) Add new product with not existed categoryTitle(400)")
+    @DisplayName("(-) Add new product with not existed categoryTitle(400)")
     void createProductCategoryTitleIntNegativeTest() {
         retrofit2.Response<Product> response =
                 productService.createProduct(product.withCategoryTitle(faker.pokemon().name()))
@@ -108,7 +113,7 @@ public class PostProductTests {
     @SneakyThrows
     @AfterEach
     @Step("Tear down")
-    @Description("Tear down")
+    @DisplayName("Tear down")
     void tearDown() {
         if (productId != null) {
             productsMapper.deleteByPrimaryKey(Long.valueOf(productId));

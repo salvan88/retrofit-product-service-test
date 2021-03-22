@@ -3,6 +3,7 @@ package ru.vasiljev.aa;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
+import io.qameta.allure.Story;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
 import retrofit2.Response;
@@ -45,9 +46,10 @@ public class PutProductTests {
     }
 
     @SneakyThrows
+    @Story("Positive")
     @Test
     @Step("Test")
-    @Description("(+) Change price for existed product(FOOD)(200)")
+    @DisplayName("(+) Change price for existed product(FOOD)(200)")
     void putProductChangePrisePositiveTest() {
         Response<Product> response =
                 productService.updateProduct(product.withPrice(randomNumber))
@@ -62,23 +64,10 @@ public class PutProductTests {
     }
 
     @SneakyThrows
+    @Story("Positive")
     @Test
     @Step("Test")
-    @Description("(-) Change price for not existed product(400)")
-    void putProductChangeWrongIdNegativeTest() {
-        Response<Product> response =
-                productService.updateProduct(product.withId(randomNumber))
-                        .execute();
-
-        assertThat(response.code()).as("Wrong code type").isEqualTo(400);
-        assertThat(ErrorBody.getErrorBody(response).getMessage()).as("Wrong error message")
-                .isEqualTo("Product with id: %d doesn't exist", randomNumber);
-    }
-
-    @SneakyThrows
-    @Test
-    @Step("Test")
-    @Description("(+) Change title for existed product(ELECTRONIC)(200)")
+    @DisplayName("(+) Change title for existed product(ELECTRONIC)(200)")
     void putProductChangeTitlePositiveTest() {
         product = CommonPostProduct.getProduct(CategoryType.ELECTRONIC.getTitle());
         productId = product.getId();
@@ -95,9 +84,25 @@ public class PutProductTests {
     }
 
     @SneakyThrows
+    @Story("Negative")
+    @Test
+    @Step("Test")
+    @DisplayName("(-) Change price for not existed product(400)")
+    void putProductChangeWrongIdNegativeTest() {
+        Response<Product> response =
+                productService.updateProduct(product.withId(randomNumber))
+                        .execute();
+
+        assertThat(response.code()).as("Wrong code type").isEqualTo(400);
+        assertThat(ErrorBody.getErrorBody(response).getMessage()).as("Wrong error message")
+                .isEqualTo("Product with id: %d doesn't exist", randomNumber);
+    }
+
+
+    @SneakyThrows
     @AfterEach
     @Step("Tear down")
-    @Description("Tear down")
+    @DisplayName("Tear down")
     void tearDown() {
         if (productId != null) {
             productsMapper.deleteByPrimaryKey(Long.valueOf(productId));

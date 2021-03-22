@@ -3,6 +3,7 @@ package ru.vasiljev.aa;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
+import io.qameta.allure.Story;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,8 +35,9 @@ public class GetCategoryTests {
     }
 
     @Test
+    @Story("Positive")
     @Step("Test")
-    @Description("(+) GET existed category product(FOOD)(200)")
+    @DisplayName("(+) GET existed category product(FOOD)(200)")
     void getFoodCategoryPositiveTest() throws IOException {
         Response<Category> response = categoryService
                 .getCategory(CategoryType.FOOD.getId())
@@ -50,8 +52,9 @@ public class GetCategoryTests {
     }
 
     @Test
+    @Story("Negative")
     @Step("Test")
-    @Description("(-) GET not existed category product(404)")
+    @DisplayName("(-) GET not existed category product(404)")
     void getCategoryNegativeTest() throws IOException {
         int i = (int) NotExistedCategories.getNextCategoriesNumber() + 2;
 
